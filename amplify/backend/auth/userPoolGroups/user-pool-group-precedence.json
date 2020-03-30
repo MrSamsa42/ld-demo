@@ -1,0 +1,10 @@
+[
+    {
+        "groupName": "webusers",
+        "precedence": 1
+    },
+    {
+        "groupName": "apiusers",
+        "precedence": 2
+    }
+]
