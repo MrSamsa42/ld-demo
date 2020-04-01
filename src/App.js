@@ -1,11 +1,11 @@
 import React from 'react';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './aws-exports';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Home from './components/Home';
-import Admin from './components/Admin';
+import Welcome from './components/Welcome';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import PrivateRoute from './PrivateRoute';
@@ -36,20 +36,12 @@ function App() {
   return (
     <AuthContext.Provider value={[state, setState]}>
       <Router>
-        <div>
-          <ul>
-            <li>
-              <Link to="/">Home Page</Link>
-            </li>
-            <li>
-              <Link to="/admin">Admin Page</Link>
-            </li>
-          </ul>
-          <Route exact path="/" component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/signup" component={SignUp} />
-          <PrivateRoute path="/admin" component={Admin} />
-        </div>
+          <Switch>
+            <PrivateRoute exact path="/" component={Welcome} />
+            <Route path="/login" component={Login} />
+            <Route path="/signup" component={SignUp} />
+            {/* <PrivateRoute path="/admin" component={Admin} /> */}
+          </Switch>
       </Router>
     </AuthContext.Provider>
   )

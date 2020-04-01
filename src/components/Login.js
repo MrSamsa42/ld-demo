@@ -4,10 +4,9 @@ import { Auth } from 'aws-amplify';
 import { AuthContext } from '../context/auth';
 
 
-const Login = () => {
+const Login = (props) => {
     const [state, setState] = React.useContext(AuthContext);
-    // console.log("The state is...");
-    // console.log(state);
+
     const [tempUser, setTempUser] = React.useState({})
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -17,40 +16,32 @@ const Login = () => {
     const [lastName, setLastName] = React.useState('');
     const [newPassword, setNewPassword] = React.useState('');
 
-    //const incomplete = state.user && state.user.challengeName;
+    //if already logged in, go straight to welcome screen
+    React.useEffect( () => {
+        console.log("Is anyone logged in?....")
+        if(state.user) {
+            props.history.push('/')
+        }
+      }, [state.user]);
 
     async function handleSubmit(e) {
         e.preventDefault();
         try {
             const user = await Auth.signIn({username: email, password: password});
             if(!user.challengeName) {
-                //only set the user object if user profile is complete
-                setState({user: user});
+                //only set the user object if user profile is complete.  Don't redirect -- useEffect above handles that
+                setState({...state, user: user});
             } else if(user.challengeName === 'NEW_PASSWORD_REQUIRED') {
                 setTempUser(user)
                 setIncomplete(true);
             } else { //any other user challenge
                 setErrorMessage("There is something wrong with your user profile.  Please contact support services.");
             }
-        } catch (err) {
+        } catch (error) {
             console.log("Error signing in...")
-            console.log(err);
+            console.log(error);
+            setErrorMessage(error.message)
         }
-        // Auth.signIn({
-        //     username: email,
-        //     password: password
-        // })
-        // .then( (user) => {
-        //     console.log(user);
-        //     setState({user: user});
-        //     if(user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-        //         console.log("User info incomplete");           
-        //     }
-        // } )
-        // .catch( (err) => {
-        //     console.log("Oh fuck...");
-        //     console.log(err);
-        // });
     }
 
     async function handleUpdate(e) {
@@ -65,7 +56,7 @@ const Login = () => {
                     family_name: lastName
                 }
             );
-            setState({user: loggedUser})
+            setState({...state, user: loggedUser})
             console.log("Update worked!");
         } catch(error) {
             console.log("ERROR UPDATING....");
@@ -85,7 +76,7 @@ const Login = () => {
                     <input type="password" id="inputPassword" className="form-control" placeholder="Password" onChange={e => setPassword(e.target.value)} required />
 
                         <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-
+                    {errorMessage && <p className="text-danger">{errorMessage}</p>}
                     <p className="mt-5 mb-3 text-muted">&copy; 2017-2019</p>
                 </form>
             </div>
