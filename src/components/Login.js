@@ -6,60 +6,71 @@ import { AuthContext } from '../context/auth';
 
 const Login = () => {
     const [state, setState] = React.useContext(AuthContext);
-
-    console.log("The state is...");
-    console.log(state);
-
+    // console.log("The state is...");
+    // console.log(state);
+    const [tempUser, setTempUser] = React.useState({})
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const [error, setError] = React.useState(false);
-    // const [incomplete, setIncomplete] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
+    const [incomplete, setIncomplete] = React.useState(false);
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
     const [newPassword, setNewPassword] = React.useState('');
 
-    const incomplete = state.user && state.user.challengeName;
+    //const incomplete = state.user && state.user.challengeName;
 
-    function handleSubmit(e) {
-        console.log(email, password);
+    async function handleSubmit(e) {
         e.preventDefault();
-        Auth.signIn({
-            username: email,
-            password: password
-        })
-        .then( (user) => {
-            console.log(user);
-            setState({user: user});
-            if(user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-                console.log("shit...incomplete");
-                
+        try {
+            const user = await Auth.signIn({username: email, password: password});
+            if(!user.challengeName) {
+                //only set the user object if user profile is complete
+                setState({user: user});
+            } else if(user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+                setTempUser(user)
+                setIncomplete(true);
+            } else { //any other user challenge
+                setErrorMessage("There is something wrong with your user profile.  Please contact support services.");
             }
-        } )
-        .catch( (err) => {
-            console.log("Oh fuck...");
+        } catch (err) {
+            console.log("Error signing in...")
             console.log(err);
-        });
+        }
+        // Auth.signIn({
+        //     username: email,
+        //     password: password
+        // })
+        // .then( (user) => {
+        //     console.log(user);
+        //     setState({user: user});
+        //     if(user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+        //         console.log("User info incomplete");           
+        //     }
+        // } )
+        // .catch( (err) => {
+        //     console.log("Oh fuck...");
+        //     console.log(err);
+        // });
     }
 
     async function handleUpdate(e) {
         e.preventDefault();
         try {
             const loggedUser = await Auth.completeNewPassword(
-                state.user,              // the Cognito User Object
-                newPassword,       // the new password
-                // OPTIONAL, the required attributes
+                tempUser, // Cognito User Object
+                newPassword,    
+                //required attributes...
                 {
                     name: firstName,
                     family_name: lastName
                 }
             );
             setState({user: loggedUser})
-            console.log(loggedUser);
+            console.log("Update worked!");
         } catch(error) {
             console.log("ERROR UPDATING....");
             console.log(error);
         }
-        
     }
 
     if(!incomplete) {

@@ -7,7 +7,7 @@ const Admin = (props) => {
         <div>
             <h1>Admin Page</h1>
             {state.user ? (
-                <h2>Hello User</h2>
+                <h2>Hello {state.user.attributes.name}</h2>
             ) : (
                 <h2>WTF?</h2>
             )}
