@@ -5,16 +5,17 @@ import { Redirect } from 'react-router-dom';
 
 const Welcome = (props) => {
     const [state, setState] = React.useContext(AuthContext);
+    console.log(state);
 
     //TODO: move this bit to a nav bar
-    if(state.redirect) {
+    if(!state.isLoggedIn) {
         return (
-            <Redirect to='/' push={true} />
+            <Redirect to='/login' push={true} />
         )
     }
     async function handleLogout() {
         await Auth.signOut();
-        setState({...state, user: null, redirect: true});
+        setState({...state, user: null, isLoggedIn: false});
     }
 
     return (
