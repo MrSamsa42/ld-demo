@@ -13,6 +13,8 @@ const Login = (props) => {
     const [password, setPassword] = React.useState('');
     const [errorMessage, setErrorMessage] = React.useState('');
     const [incomplete, setIncomplete] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
     const [newPassword, setNewPassword] = React.useState('');
@@ -51,6 +53,8 @@ const Login = (props) => {
 
     async function handleSubmit(e) {
         e.preventDefault();
+        setErrorMessage('');
+        setLoading(true);
         try {
             const user = await Auth.signIn({username: email, password: password});
             if(!user.challengeName) {
@@ -59,19 +63,23 @@ const Login = (props) => {
                 setRedirect(true);
             } else if(user.challengeName === 'NEW_PASSWORD_REQUIRED') {
                 setTempUser(user)
+                setLoading(false);
                 setIncomplete(true);
             } else { //any other user challenge
                 setErrorMessage("There is something wrong with your user profile.  Please contact support services.");
+                setLoading(false);
             }
         } catch (error) {
             console.log("Error signing in...")
             console.log(error);
+            setLoading(false);
             setErrorMessage(error.message)
         }
     }
 
     async function handleUpdate(e) {
         e.preventDefault();
+        setLoading(true);
         try {
             const loggedUser = await Auth.completeNewPassword(
                 tempUser, // Cognito User Object
@@ -87,24 +95,41 @@ const Login = (props) => {
             console.log("Update worked!");
         } catch(error) {
             console.log("ERROR UPDATING....");
+            setLoading(false);
+            setErrorMessage("Something went wrong...")
             console.log(error);
         }
     }
 
+    var divStyle = {
+        color: 'red',
+        height: '30px'
+    }
+
     if(!incomplete) {
         return (
-            <div className="container">
+            <div class="wrapper text-center">
                 <form className="form-signin" onSubmit={handleSubmit}>
                     <img className="mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
-                    <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+                    <h1 className="h3 mb-5 font-weight-normal">Please sign in</h1>
                     <label htmlFor="inputEmail" className="sr-only">Email address</label>
-                    <input type="email" id="inputEmail" className="form-control" placeholder="Email address" onChange={e => setEmail(e.target.value)} required autoFocus />
+                    <input type="email" id="inputEmail" className="form-control mb-2" placeholder="Email address" onChange={e => setEmail(e.target.value)} required autoFocus />
                     <label htmlFor="inputPassword" className="sr-only">Password</label>
                     <input type="password" id="inputPassword" className="form-control" placeholder="Password" onChange={e => setPassword(e.target.value)} required />
 
-                        <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-                    {errorMessage && <p className="text-danger">{errorMessage}</p>}
-                    <p className="mt-5 mb-3 text-muted">&copy; 2017-2019</p>
+                        <button className="btn btn-lg btn-primary btn-block" disabled={loading}  type="submit">Sign in</button>
+                    <div id="messageBox" className="row justify-content-center align-items-center mt-5" >
+                            {errorMessage && 
+                            <p className="text-danger">{errorMessage} </p>
+                            }
+                            {loading &&
+                            <div class="spinner-grow" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            }   
+                    </div>
+
+                    <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
                 </form>
             </div>
         );
@@ -120,8 +145,8 @@ const Login = (props) => {
                     <label htmlFor="updatePassword" className="sr-only">New Password</label>
                     <input type="password" id="updatePassword" className="form-control" placeholder="New Password" onChange={e => setNewPassword(e.target.value)} required />
                         <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-
-                    <p className="mt-5 mb-3 text-muted">&copy; 2017-2019</p>
+                    {errorMessage && <p className="text-danger">{errorMessage}</p>}
+                    <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
                 </form>
             </div>
         );
