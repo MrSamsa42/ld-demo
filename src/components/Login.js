@@ -17,20 +17,30 @@ const Login = (props) => {
     const [lastName, setLastName] = React.useState('');
     const [newPassword, setNewPassword] = React.useState('');
 
-    const getAuthenticatedUser = async () => {
-        try{
-          await Auth.currentAuthenticatedUser();
-          setRedirect(true);
-        } catch (error) {
-            if(error !== "not authenticated") {
-                alert(error);
-            }
-        }
-    };
-    
+
+    /*
+        isCancelled is needed to prevent errors resulting from attempts to update an unmounted component
+        see this SO post and linked article therein: https://stackoverflow.com/questions/56442582/react-hooks-cant-perform-a-react-state-update-on-an-unmounted-component/56443045#56443045
+    */
+    const isCancelled = React.useRef(false);
       React.useEffect( () => {
         console.log("hello from Login's useEffect")
-        getAuthenticatedUser(); 
+        const getAuthenticatedUser = async () => {
+            try{
+              await Auth.currentAuthenticatedUser();
+              if(!isCancelled.current) {
+                  setRedirect(true);
+              }
+            } catch (error) {
+                if(error !== "not authenticated") {
+                    alert(error);
+                }
+            }
+        };
+        getAuthenticatedUser();
+        return () => {
+            isCancelled.current = true;
+        } 
       }, []);
 
     if(redirect) {
