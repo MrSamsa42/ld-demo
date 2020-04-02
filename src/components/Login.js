@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 import { AuthContext } from '../context/auth';
 
 
 const Login = (props) => {
     const [state, setState] = React.useContext(AuthContext);
+    const [redirect, setRedirect] = React.useState(false);
 
     const [tempUser, setTempUser] = React.useState({})
     const [email, setEmail] = React.useState('');
@@ -16,13 +17,27 @@ const Login = (props) => {
     const [lastName, setLastName] = React.useState('');
     const [newPassword, setNewPassword] = React.useState('');
 
-    //if already logged in, go straight to welcome screen
-    React.useEffect( () => {
-        console.log("Is anyone logged in?....")
-        if(state.user) {
-            props.history.push('/')
+    const getAuthenticatedUser = async () => {
+        try{
+          await Auth.currentAuthenticatedUser();
+          setRedirect(true);
+        } catch (error) {
+            if(error !== "not authenticated") {
+                alert(error);
+            }
         }
-      }, [state.user]);
+    };
+    
+      React.useEffect( () => {
+        console.log("hello from Login's useEffect")
+        getAuthenticatedUser(); 
+      }, []);
+
+    if(redirect) {
+        return (
+            <Redirect to='/' push={true} />
+        )
+    }
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -31,6 +46,7 @@ const Login = (props) => {
             if(!user.challengeName) {
                 //only set the user object if user profile is complete.  Don't redirect -- useEffect above handles that
                 setState({...state, user: user});
+                setRedirect(true);
             } else if(user.challengeName === 'NEW_PASSWORD_REQUIRED') {
                 setTempUser(user)
                 setIncomplete(true);
@@ -57,6 +73,7 @@ const Login = (props) => {
                 }
             );
             setState({...state, user: loggedUser})
+            setRedirect(true);
             console.log("Update worked!");
         } catch(error) {
             console.log("ERROR UPDATING....");
