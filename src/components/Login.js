@@ -45,7 +45,7 @@ const Login = (props) => {
             const user = await Auth.signIn({username: email, password: password});
             if(!user.challengeName) {
                 //only set the user object if user profile is complete.  Don't redirect -- useEffect above handles that
-                setState({...state, user: user, isLoggedIn: true});
+                setState({...state, user: user});
                 setRedirect(true);
             } else if(user.challengeName === 'NEW_PASSWORD_REQUIRED') {
                 setTempUser(user)
@@ -72,7 +72,7 @@ const Login = (props) => {
                     family_name: lastName
                 }
             );
-            setState({...state, user: loggedUser, isLoggedIn: true})
+            setState({...state, user: loggedUser})
             setRedirect(true);
             console.log("Update worked!");
         } catch(error) {

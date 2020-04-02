@@ -12,7 +12,7 @@ import { AuthContext } from './context/auth';
 Amplify.configure(awsconfig);
 
 function App() {
-  const [state, setState] = React.useState({isLoggedIn: false});
+  const [state, setState] = React.useState({});
 
   const getAuthenticatedUser = async () => {
     let user = null;
