@@ -7,15 +7,18 @@ import { Redirect } from 'react-router-dom';
 
 const Navbar = (props) => {
     const [state, setState] = React.useContext(AuthContext);
-    //TODO: move this bit to a nav bar
-    if(!state.user) {
+    if (!state.user) {
         return (
             <Redirect to='/login' push={true} />
         )
     }
     async function handleLogout() {
         await Auth.signOut();
-        setState({...state, user: null});
+        setState({ ...state, user: null });
+    }
+
+    const changeAccount = (e) => {
+        
     }
 
     return (
@@ -65,9 +68,17 @@ const Navbar = (props) => {
                     </li>
                 </ul>
                 <ul className="nav navbar-nav ml-auto">
-                    <li>Item 1</li>
-                    <li>Item 2</li>
-                    <li>Item 3</li>
+                    <li>
+                        <form className="form-inline">
+                            <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                                <option selected>Choose...</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </form>
+
+                    </li>
                     <li className="nav-item">
                         <a href="" className="nav-link" onClick={() => handleLogout()}><span className="d-none d-sm-inline d-xl-block px-1">Log Out</span></a>
                     </li>
@@ -78,4 +89,3 @@ const Navbar = (props) => {
 }
 
 export default Navbar;
-        
