@@ -1,20 +1,16 @@
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { AuthContext } from '../context/auth';
 import { Auth } from 'aws-amplify';
 import { Redirect } from 'react-router-dom';
 
 const Navbar = (props) => {
     const [state, setState] = React.useContext(AuthContext);
-    if (!state.user) {
-        return (
-            <Redirect to='/login' push={true} />
-        )
-    }
+
     async function handleLogout() {
         await Auth.signOut();
-        setState({ ...state, user: null });
+        //setState({ ...state, user: null });
     }
 
     const changeAccount = (e) => {
@@ -31,10 +27,10 @@ const Navbar = (props) => {
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
-                        <a className="nav-link" href="">Home <span className="sr-only">(current)</span></a>
+                        <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="">Reports <span className="sr-only">(current)</span></a>
+                        <Link className="nav-link" to="/reports">Reports <span className="sr-only">(current)</span></Link>
                     </li>
                     <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"

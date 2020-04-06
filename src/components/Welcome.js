@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { AuthContext } from '../context/auth';
 import { Auth } from 'aws-amplify';
 import { Redirect } from 'react-router-dom';
@@ -35,33 +35,29 @@ const fakeAccounts = [
 const defaultAccount = fakeAccounts[0];
 
 const Welcome = (props) => {
-    const [state, setState] = React.useContext(AuthContext);
-    console.log(state);
-
+    const [name, setName] = useState("");
+    
+    
     React.useEffect( () => {
-      console.log("hello from Welcome's useEffect")
-      const fakeAsync = async () => {
-          try{
-            await stall(2000);
-            setState({
-                ...state, 
-                accounts: fakeAccounts,
-                currentAccount: defaultAccount
-            })
-          } catch (error) {
-              console.log(error);
-          }
-      };
-      fakeAsync(); 
-    }, []);
+        console.log("hello from Login's useEffect")
+        const getAuthenticatedUser = async () => {
+            try{
+              const user = await Auth.currentAuthenticatedUser();
+              setName(user.attributes.name);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getAuthenticatedUser();
+      }, []);
+;
 
     return (
         <div>
-            <Navbar />
             <header className="jumbotron jumbotron-fluid bg-info text-white">
                 <div className="container">
-                    <h1 className="display-4">Welcome to LD-Demo, {state.user.attributes.name}!</h1>
-                    <p className="lead">You are currently acting on behalf of the Account, <strong>{state.currentAccount && state.currentAccount.name}</strong>. If you are affiliated with more than one Account, you may change Accounts at any time by selecting from the drop-down menu in the navigation bar above.</p>
+                    <h1 className="display-4">Welcome to LD-Demo, {name}!</h1>
+                    <p className="lead">You are currently acting on behalf of the Account, <strong>XXXXXXXX</strong>. If you are affiliated with more than one Account, you may change Accounts at any time by selecting from the drop-down menu in the navigation bar above.</p>
                 </div>
             </header>
             <div className="container">
@@ -76,7 +72,7 @@ const Welcome = (props) => {
                     <div className="col-md-4 mb-5">
                         <h2 className="h3">Retention Rep</h2>
                         <hr />
-                        <div>
+                        {/* <div>
                             <strong>{state.currentAccount && state.currentAccount.name}</strong>
                             <br />{state.currentAccount && state.currentAccount.repName}
                             <br />
@@ -87,7 +83,7 @@ const Welcome = (props) => {
                             <br />
                             <abbr title="Email">E:</abbr>
                             <a href="mailto:#">{state.currentAccount && state.currentAccount.repPhone}</a>
-                        </address>
+                        </address> */}
                     </div>
                 </div>
             </div>
