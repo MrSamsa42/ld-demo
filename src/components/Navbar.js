@@ -2,12 +2,19 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Auth } from 'aws-amplify';
+import { connect } from 'react-redux';
 
 const Navbar = (props) => {
 
     async function handleLogout() {
         await Auth.signOut();
     }
+
+    const accountOptions = props.accounts.map( acct => {
+        return acct.id !== props.currentAccount.id ? (
+            <option key={acct.id} value={acct.id}>{acct.name}</option>
+        ) : null;        
+    })
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light ml-2 mr-2">
@@ -59,10 +66,11 @@ const Navbar = (props) => {
                     <li>
                         <form className="form-inline">
                             <select className="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-                                <option selected>Choose...</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                <option selected>{props.currentAccount && props.currentAccount.name}</option>
+                                {
+                                    props.accounts && 
+                                    accountOptions
+                                }
                             </select>
                         </form>
 
@@ -76,4 +84,11 @@ const Navbar = (props) => {
     )
 }
 
-export default Navbar;
+const mapStateToProps = state => {
+    return {
+        accounts: state.account.accounts,
+        currentAccount: state.account.currentAccount
+    }
+}
+
+export default connect(mapStateToProps)(Navbar);
