@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import { Auth } from "aws-amplify";
 import '../styles/auth.css';
+import { connect } from 'react-redux';
 
-export class CustomSignIn extends Component {
+class CustomSignIn extends Component {
   constructor(props) {
     super(props);
     this._validAuthStates = ["signIn", "signedOut", "signedUp"];
@@ -87,3 +88,5 @@ export class CustomSignIn extends Component {
   );
   }
 }
+
+export default connect()(CustomSignIn);

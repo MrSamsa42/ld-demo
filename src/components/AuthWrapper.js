@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { InternalApp } from "./InternalApp";
-import { CustomSignIn } from "./CustomSignIn";
+import CustomSignIn from "./CustomSignIn";
 import '../styles/auth.css';
+
+import store from "../store";
+import { Provider } from 'react-redux';
+
 
 class AuthWrapper extends Component {
   constructor(props) {
@@ -9,18 +13,15 @@ class AuthWrapper extends Component {
     this.state = {
       username: ""
     };
-    this.updateUsername = this.updateUsername.bind(this);
   }
 
-  updateUsername(newUsername) {
+  updateUsername = (newUsername) => {
     this.setState({ username: newUsername });
   }
 
   render() {
-    console.log("PROPS ARE...");
-    console.log(this.props);
     return (
-      <div>
+      <Provider store={store}>
         <CustomSignIn
           authState={this.props.authState}
           updateUsername={this.updateUsername}
@@ -31,7 +32,7 @@ class AuthWrapper extends Component {
           authState={this.props.authState}
           onStateChange={this.props.onStateChange}
         />
-      </div>
+      </Provider>
     );
   }
 }
