@@ -7,6 +7,8 @@ import RequestPickup from "./RequestPickup";
 import PickupHistory from "./PickupHistory";
 import OrderTests from "./OrderTests";
 import TestOrderHistory from "./TestOrderHistory";
+import OrderSupplies from "./OrderSupplies";
+import SupplyOrderHistory from "./SupplyOrderHistory";
 
 export class InternalApp extends Component {
 
@@ -23,6 +25,8 @@ export class InternalApp extends Component {
                             <Route path="/pickup-history" component={PickupHistory} />
                             <Route path="/order-tests" component={OrderTests} />
                             <Route path="/test-order-history" component={TestOrderHistory} />
+                            <Route path="/order-supplies" component={OrderSupplies} />
+                            <Route path="/supply-order-history" component={SupplyOrderHistory} />
                         </Switch>
                     </Router>
                 </>

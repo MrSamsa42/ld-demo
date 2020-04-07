@@ -12,7 +12,8 @@ export class CustomSignIn extends Component {
     this.state = {
       username: '',
       password: '', 
-      error: ''
+      error: '',
+      loading: false
     }
   }
 
@@ -21,12 +22,15 @@ export class CustomSignIn extends Component {
   }
 
   async signIn() {
-    const {username, password} = this.state;
+    const {username, password, loading} = this.state;
     console.log(`The user name is ${username} and password is ${password}`);
     try {
+      this.setState({loading: true});
       await Auth.signIn(username, password);
       this.props.onStateChange("signedIn", {});
+      this.setState({loading: false});
     } catch (err) {
+      this.setState({loading: false});
       console.log(err);
       if (err.code === "UserNotConfirmedException") {
         this.props.updateUsername(username);
@@ -34,12 +38,12 @@ export class CustomSignIn extends Component {
         this.props.onStateChange("confirmSignUp", {});
       } else if (err.code === "NotAuthorizedException") {
         // The error happens when the incorrect password is provided
-        this.setState({ error: "Login failed." });
+        this.setState({ error: err.message});
       } else if (err.code === "UserNotFoundException") {
         // The error happens when the supplied username/email does not exist in the Cognito user pool
-        this.setState({ error: "Login failed." });
+        this.setState({ error: err.message });
       } else {
-        this.setState({ error: "An error has occurred." });
+        this.setState({ error: err.message });
         console.error(err);
       }
     }
@@ -52,8 +56,7 @@ export class CustomSignIn extends Component {
 
 
   render() {
-    const errorMessage = null;
-    const loading = null;
+    const {error, loading} = this.state
     return (
       <div className="text-center">
       {this._validAuthStates.includes(this.props.authState) && (
@@ -67,8 +70,8 @@ export class CustomSignIn extends Component {
 
                   <button className="btn btn-lg btn-primary btn-block" disabled={loading}  type="submit" onClick={this.handleInputChange} >Sign in</button>
               <div id="messageBox" className="row justify-content-center align-items-center mt-5" >
-                      {errorMessage && 
-                      <p className="text-danger">{errorMessage} </p>
+                      {error && 
+                      <p className="text-danger">{this.state.error} </p>
                       }
                       {loading &&
                       <div class="spinner-grow" role="status">

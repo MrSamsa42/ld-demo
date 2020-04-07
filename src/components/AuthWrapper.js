@@ -17,6 +17,8 @@ class AuthWrapper extends Component {
   }
 
   render() {
+    console.log("PROPS ARE...");
+    console.log(this.props);
     return (
       <div>
         <CustomSignIn
