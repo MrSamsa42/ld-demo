@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import { Auth } from "aws-amplify";
-import { SignIn } from "aws-amplify-react";
 import '../styles/auth.css';
 
 export class CustomSignIn extends Component {
@@ -28,6 +27,7 @@ export class CustomSignIn extends Component {
       await Auth.signIn(username, password);
       this.props.onStateChange("signedIn", {});
     } catch (err) {
+      console.log(err);
       if (err.code === "UserNotConfirmedException") {
         this.props.updateUsername(username);
         await Auth.resendSignUp(username);

@@ -1,32 +1,28 @@
-import React, {useState} from 'react';
-import { AuthContext } from '../context/auth';
+import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
-import { Redirect } from 'react-router-dom';
-
-import Navbar from './Navbar';
 
 async function stall(stallTime = 3000) {
     await new Promise(resolve => setTimeout(resolve, stallTime));
-  }
+}
 
 const fakeAccounts = [
     {
         id: 1,
-        name: "Clinic A", 
+        name: "Clinic A",
         repName: "Johnny Faker",
         repPhone: "111-111-1111",
         repEmail: "jfaker@fake.com"
     },
     {
         id: 2,
-        name: "Clinic B", 
+        name: "Clinic B",
         repName: "Steve Notreal",
         repPhone: "222-222-2222",
         repEmail: "snotreal@fake.com"
     },
     {
         id: 3,
-        name: "Clinic C", 
+        name: "Clinic C",
         repName: "Amy Alias",
         repPhone: "333-333-3333",
         repEmail: "aalias@fake.com"
@@ -36,27 +32,26 @@ const defaultAccount = fakeAccounts[0];
 
 const Welcome = (props) => {
     const [name, setName] = useState("");
-    
-    
-    React.useEffect( () => {
-        console.log("hello from Login's useEffect")
+
+    React.useEffect(() => {
+        console.log("hello from Welcome's useEffect")
         const getAuthenticatedUser = async () => {
-            try{
-              const user = await Auth.currentAuthenticatedUser();
-              setName(user.attributes.name);
+            try {
+                const user = await Auth.currentAuthenticatedUser();
+                setName(user.attributes.name);
             } catch (error) {
                 console.log(error);
             }
         };
         getAuthenticatedUser();
-      }, []);
-;
+    }, []);
+    ;
 
     return (
         <div>
             <header className="jumbotron jumbotron-fluid bg-info text-white">
                 <div className="container">
-                    <h1 className="display-4">Welcome to LD-Demo, {name}!</h1>
+                    <h1 className="display-4">Welcome to LD-Demo{name ? ", " + name : "..." }</h1>
                     <p className="lead">You are currently acting on behalf of the Account, <strong>XXXXXXXX</strong>. If you are affiliated with more than one Account, you may change Accounts at any time by selecting from the drop-down menu in the navigation bar above.</p>
                 </div>
             </header>

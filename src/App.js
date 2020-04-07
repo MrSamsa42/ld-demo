@@ -1,5 +1,5 @@
 import React from 'react';
-import Amplify, { Auth } from 'aws-amplify';
+import Amplify from 'aws-amplify';
 import awsconfig from './aws-exports';
 import { Authenticator } from 'aws-amplify-react';
 import AuthWrapper from './components/AuthWrapper';

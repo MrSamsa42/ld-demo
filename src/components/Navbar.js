@@ -1,20 +1,12 @@
 
 import React from 'react';
 import { Link } from "react-router-dom";
-import { AuthContext } from '../context/auth';
 import { Auth } from 'aws-amplify';
-import { Redirect } from 'react-router-dom';
 
 const Navbar = (props) => {
-    const [state, setState] = React.useContext(AuthContext);
 
     async function handleLogout() {
         await Auth.signOut();
-        //setState({ ...state, user: null });
-    }
-
-    const changeAccount = (e) => {
-        
     }
 
     return (
@@ -33,40 +25,40 @@ const Navbar = (props) => {
                         <Link className="nav-link" to="/reports">Reports <span className="sr-only">(current)</span></Link>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        <a href="/#" className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             Courier Pickup
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a className="dropdown-item" href="">Request Pickup</a>
-                            <a className="dropdown-item" href="">Pickup History</a>
+                            <Link className="dropdown-item" to="/request-pickup">Request Pickup</Link>
+                            <Link className="dropdown-item" to="/pickup-history">Pickup History</Link>
                         </div>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        <a href="/#" className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             Test Orders
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a className="dropdown-item" href="">Order Tests</a>
-                            <a className="dropdown-item" href="">Test Order History</a>
+                            <Link className="dropdown-item" to="/order-tests">Order Tests</Link>
+                            <Link className="dropdown-item" to="test-order-history">Test Order History</Link>
                         </div>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        <a href="/#" className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             Supply Orders
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a className="dropdown-item" href="">Order Supplies</a>
-                            <a className="dropdown-item" href="">Supply Order History</a>
+                            <Link className="dropdown-item" to="/order-supplies">Order Supplies</Link>
+                            <Link className="dropdown-item" to="/supply-order-history">Supply Order History</Link>
                         </div>
                     </li>
                 </ul>
                 <ul className="nav navbar-nav ml-auto">
                     <li>
                         <form className="form-inline">
-                            <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                            <select className="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
                                 <option selected>Choose...</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
@@ -76,7 +68,7 @@ const Navbar = (props) => {
 
                     </li>
                     <li className="nav-item">
-                        <a href="" className="nav-link" onClick={() => handleLogout()}><span className="d-none d-sm-inline d-xl-block px-1">Log Out</span></a>
+                        <a href="/#" role="button" className="nav-link" onClick={() => handleLogout()}><span className="d-none d-sm-inline d-xl-block px-1">Log Out</span></a>
                     </li>
                 </ul>
             </div>
