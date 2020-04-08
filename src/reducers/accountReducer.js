@@ -30,6 +30,13 @@ const initialState = {
 }
 
 const accountReducer = (state = initialState, action) => {
+    if (action.type === 'CHANGE_CURRENT_ACCOUNT') {
+        const newCurrentAccount = state.posts.find( state.accounts.id === action.id );
+        return {
+            ...state,
+            currentAccount: newCurrentAccount
+        }
+    }
     return state;
 }
 

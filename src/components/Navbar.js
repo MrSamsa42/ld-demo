@@ -5,6 +5,7 @@ import { Auth } from 'aws-amplify';
 import { connect } from 'react-redux';
 
 const Navbar = (props) => {
+    console.log(props);
 
     async function handleLogout() {
         await Auth.signOut();
@@ -91,4 +92,10 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(Navbar);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeCurrentAccount: (id) => {dispatch({ type: 'CHANGE_CURRENT_ACCOUNT', id: id }) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
