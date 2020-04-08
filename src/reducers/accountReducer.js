@@ -31,7 +31,7 @@ const initialState = {
 
 const accountReducer = (state = initialState, action) => {
     if (action.type === 'CHANGE_CURRENT_ACCOUNT') {
-        const newCurrentAccount = state.posts.find( state.accounts.id === action.id );
+        const newCurrentAccount = state.accounts.find( acct => acct.id == action.id ); //use '==' because id may be an int
         return {
             ...state,
             currentAccount: newCurrentAccount

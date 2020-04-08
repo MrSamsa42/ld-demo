@@ -10,7 +10,6 @@ const Welcome = (props) => {
     const [name, setName] = useState("");
 
     React.useEffect(() => {
-        console.log("hello from Welcome's useEffect")
         const getAuthenticatedUser = async () => {
             try {
                 const user = await Auth.currentAuthenticatedUser();
@@ -29,7 +28,7 @@ const Welcome = (props) => {
             <header className="jumbotron jumbotron-fluid bg-info text-white">
                 <div className="container">
                     <h1 className="display-4">Welcome to LD-Demo{name ? ", " + name : "..." }</h1>
-                    <p className="lead">You are currently acting on behalf of the Account, <strong>{props.currentAccount.name}</strong>. If you are affiliated with more than one Account, you may change Accounts at any time by selecting from the drop-down menu in the navigation bar above.</p>
+                    <p className="lead">You are currently acting on behalf of the Account, <strong>{props.currentAccount && props.currentAccount.name}</strong>. If you are affiliated with more than one Account, you may change Accounts at any time by selecting from the drop-down menu in the navigation bar above.</p>
                 </div>
             </header>
             <div className="container">
@@ -54,7 +53,7 @@ const Welcome = (props) => {
                             {props.currentAccount && props.currentAccount.repPhone}
                             <br />
                             <abbr title="Email">E:</abbr>
-                            <a href="mailto:#">{props.currentAccount && props.currentAccount.repPhone}</a>
+                            <a href="mailto:#">{props.currentAccount && props.currentAccount.repEmail}</a>
                         </address>
                     </div>
                 </div>

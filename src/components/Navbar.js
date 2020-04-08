@@ -5,7 +5,6 @@ import { Auth } from 'aws-amplify';
 import { connect } from 'react-redux';
 
 const Navbar = (props) => {
-    console.log(props);
 
     async function handleLogout() {
         await Auth.signOut();
@@ -16,6 +15,12 @@ const Navbar = (props) => {
             <option key={acct.id} value={acct.id}>{acct.name}</option>
         ) : null;        
     })
+
+    const handleChangeAccountSubmit = (e) => {
+        console.log(e.target.value);
+        // e.preventDefault();
+        props.changeCurrentAccount(e.target.value);
+    }
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light ml-2 mr-2">
@@ -65,9 +70,9 @@ const Navbar = (props) => {
                 </ul>
                 <ul className="nav navbar-nav ml-auto">
                     <li>
-                        <form className="form-inline">
-                            <select className="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-                                <option selected>{props.currentAccount && props.currentAccount.name}</option>
+                        <form className="form-inline" onSubmit={handleChangeAccountSubmit}>
+                            <select onChange={handleChangeAccountSubmit} className="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                                <option selected value={props.currentAccount && props.currentAccount.id}>{props.currentAccount && props.currentAccount.name}</option>
                                 {
                                     props.accounts && 
                                     accountOptions
